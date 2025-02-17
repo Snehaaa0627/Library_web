@@ -12,6 +12,7 @@ library = LibraryInterface("127.0.0.1", 5555)
 library.register_user('admin', 'admin')
 library.register_user('user', 'user')
 
+#Main code starts here
 # Define Routes
 @app.route('/')
 def home():
