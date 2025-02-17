@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>LIBRARY DASHBOARD</h2>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="/books">Books</a></li>
+                <li><a href="/return">Return books</a></li>
+                <li><a href="/developer">Developers</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="dashboard-header">
+                <h1>Welcome, <span id="username">{{ session['username'] | capitalize }}</span>!</h1>
+                <img src="/static/images/vit_lib.jpg" alt="Welcome Banner" class="full-width-banner">
+            </header>
+            <!-- Feedback Messages -->
+            {% if success %}
+                <div class="success-message">{{ success }}</div>
+            {% elif error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+             <!-- Rooms Display -->
+             <section class="rooms-section">
+                <h2>AVAILABLE ROOMS</h2>
+                <div class="room-cards">
+                    {% for room in rooms %}
+                        <div class="room-card {% if room['seats_available'] == 0 %}room-full{% endif %}">
+                            <h3>Room {{ room['name'] }}</h3>
+                            <p>Seats Available: {{ room['seats_available'] }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Room Allocation Form -->
+            <section class="allocation-section">
+                <h2>Allocate a Room</h2>
+                <form method="POST">
+                    <label for="room-select">Select a Room:</label>
+                    <select name="room_name" id="room-select" required>
+                        {% for room in rooms %}
+                            {% if room['seats_available'] > 0 %}
+                                <option value="{{ room['name'] }}">Room {{ room['name'] }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>                    
+                    <button type="submit">Allocate</button>
+                </form>
+            </section>
+        </div>
+    </div>
+    <!-- SNACKBAR MESSAGE STYLING-->
+    <style>
+        .success-message, .error-message {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success-message { background-color: #d4edda; color: #155724; }
+        .error-message { background-color: #f8d7da; color: #721c24; }
+        .room-cards {
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 10px; 
+            justify-content: center; 
+        }
+
+        .room-card {
+            background-color: #f0f8ff;
+            border-radius: 10px;
+            padding: 1.5rem;
+            width: 140px; 
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .room-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: #473021;
+        }
+
+        .room-card p {
+            font-size: 1.2rem;
+            color: #774b2d;
+        }
+
+        .room-card:hover {
+            transform: translateY(-10px);
+        }
+
+        @media (max-width: 768px) {
+            .room-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        .room-full { background-color: #f8d7da; color: #721c24; }
+        .allocation-section {
+        text-align: center;
+        margin-top: 35px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .allocation-section h2 {
+        color: #473021;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+
+    .allocation-section label {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #774b2d;
+        margin-right: 10px;
+    }
+
+    #room-select {
+        padding: 10px 15px;
+        font-size: 1rem;
+        border: 2px solid #473021;
+        border-radius: 8px;
+        background-color: #ffffff;
+        color: #473021;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    #room-select:hover {
+        background-color: #f0f8ff;
+    }
+
+    button[type="submit"] {
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        background-color: #473021;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s ease;
+        margin-left: 10px;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #774b2d;
+    }
+
+    @media (max-width: 768px) {
+        .allocation-section {
+            width: 90%;
+        }
+
+        #room-select {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+        }
+    }
+
+    </style>
+</body>
+</html>

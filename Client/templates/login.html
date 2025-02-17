@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Login</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <div class="library-container">
+        <div class="welcome-section">
+            <h1>WELCOME TO LIBRARY</h1>
+            <div class="illustration">
+                <img src="/static/images/login_picture.jpg" alt="Library Illustration">
+            </div>
+        </div>
+        <!-- LOGIN SECTION -->
+        <div class="login-section">
+            <div class="login-box">
+                <h2>Login Page</h2>
+                <p>Welcome! Log in to your account</p>
+                <!-- Display Error Message -->
+                {% if error %}
+                <div id="snackbar" class="snackbar show">{{ error }}</div>
+                {% endif %}
+                <!-- Login Form -->
+                <form method="POST" action="/login">
+                    <label for="username">
+                        Username
+                    </label>
+                    <input type="text" id="username" name="username" placeholder="Enter Username" required>
+                    
+                    <label for="password">
+                        Password
+                    </label>
+                    <input type="password" id="password" name="password" placeholder="Enter Password" required>
+                    
+                    <button type="submit" class="login-button">LOGIN</button>
+                    <button type="button" class="signup-button" onclick="location.href='/signup';">SIGN UP</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Snackbar -->
+<script>
+    window.onload = function() {
+    const snackbar = document.getElementById("snackbar");
+    if (snackbar && snackbar.textContent.trim()) {
+        snackbar.classList.add("show");
+        setTimeout(() => {
+            snackbar.classList.remove("show");
+        }, 3000); 
+    }
+};
+</script>
+</body>
+</html>

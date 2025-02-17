@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Sign-Up</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <div class="library-container">
+        <div class="welcome-section">
+            <h1>WELCOME TO LIBRARY</h1>
+            <div class="illustration">
+                <img src="/static/images/signup_picture.jpg" alt="Library Illustration">
+            </div>
+        </div>
+        <div class="signup-section">
+            <div class="signup-box">
+                <h2>Sign-Up Page</h2>
+                <p>Create New Account Here</p>
+                <!-- snackbar Message-->
+                {% if success %}
+                <div id="snackbar1" class="snackbar1 show1">{{ success }}</div>
+                {% endif %}
+                <!--Sign up form-->
+                <form method="POST" action="/signup">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter Username" required>
+                    
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter Password" required>
+                    
+                    <button type="submit" class="signup-button">SIGN UP</button>
+                    <button type="button" class="login-button" onclick="location.href='/login';">LOGIN</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Snackbar-->
+    <script>
+        window.onload = function() {
+            const snackbar = document.getElementById("snackbar");
+            if (snackbar) {
+                setTimeout(() => {
+                    snackbar.classList.remove("show");
+                }, 3000);
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,571 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f8ff;
+    overflow-x: hidden; 
+}
+
+
+/* Library container */
+.library-container {
+    display: flex;
+    width: 95%;
+    height: 90%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Welcome Section */
+.welcome-section {
+    flex: 3;
+    background: linear-gradient(to top, #473021, hsl(20, 41%, 21%)); /* Rich brown gradient */
+    padding: 2rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.welcome-section h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: bold;
+}
+
+.welcome-section .illustration img {
+    width: 80%;
+    max-width: 400px;
+}
+
+
+
+/* Login Section */
+.login-section {
+    flex: 2.5;
+    background-color: #ffffff; 
+    color: #333; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-box {
+    background-color: #f0f8ff; 
+    border-radius: 15px;
+    padding: 2rem;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.login-box h2 {
+    margin-bottom: 1rem;
+    font-size: 24px;
+    color: #333; 
+}
+
+.login-box p {
+    margin-bottom: 2rem;
+    font-size: 14px;
+    color: #555; 
+}
+
+.login-box label {
+    display: block;
+    margin-bottom: 0.5rem;
+    text-align: left;
+    font-size: 14px;
+    color: #333; 
+    position: relative;
+}
+
+.login-box .icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.login-box input {
+    width: 100%;
+    padding: 0.8rem 0.8rem 0.8rem 2.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid  hsl(20, 41%, 21%); 
+    border-radius: 8px;
+    background-color: #ffffff; 
+    color: #333; 
+    box-sizing: border-box;
+}
+
+.login-box input::placeholder {
+    color: #7f8c8d; 
+}
+
+
+
+/* Buttons */
+.login-box .login-button,
+.login-box .signup-button {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    transition: background 0.3s ease;
+}
+
+.login-box .login-button {
+    background-color:#473021;
+    color: white;
+}
+
+.login-box .login-button:hover {
+    background-color:#774b2d; 
+}
+
+.login-box .signup-button {
+    background-color: #473021;
+    color: white;
+}
+
+.login-box .signup-button:hover {
+    background-color: #774b2d;
+}
+
+
+
+/* Sign-Up Section */
+.signup-section {
+    flex: 2.5;
+    background-color: #ffffff; 
+    color: #333; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signup-box {
+    background-color: #f0f8ff; 
+    border-radius: 15px;
+    padding: 2rem;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.signup-box h2 {
+    margin-bottom: 1rem;
+    font-size: 24px;
+    color: #333; 
+}
+
+.signup-box p {
+    margin-bottom: 2rem;
+    font-size: 14px;
+    color: #555; 
+}
+
+.signup-box label {
+    display: block;
+    margin-bottom: 0.5rem;
+    text-align: left;
+    font-size: 14px;
+    color: #333; 
+}
+
+.signup-box input {
+    width: 100%;
+    padding: 0.8rem 0.8rem 0.8rem 2.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid hsl(20, 41%, 21%);
+    border-radius: 8px;
+    background-color: #ffffff; 
+    color: #333; 
+    box-sizing: border-box;
+}
+
+.signup-box input::placeholder {
+    color: #7f8c8d; 
+}
+
+/* Buttons */
+.signup-box .signup-button {
+    background-color: #473021;
+    color: white;
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.signup-box .signup-button:hover {
+    background-color: #774b2d;
+}
+
+.signup-box .login-button {
+    background-color: #473021;
+    color: white;
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.signup-box .login-button:hover {
+    background-color: #774b2d;
+}
+
+
+
+/* Dashboard Container */
+.dashboard-container {
+    display: flex;
+    height: 100vh;  
+    width: 100%;
+    align-items: stretch;
+}
+
+
+
+/* Sidebar Styling */
+.sidebar {
+    width: 20%;
+    min-height: 125vh;
+    background: linear-gradient(to top, #473021, hsl(20, 41%, 21%)); 
+    color: white;
+    padding: 2rem;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.sidebar .nav-links {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar .nav-links li {
+    margin: 1.5rem 0;
+}
+
+.sidebar .nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-links li a:hover {
+    color: #f0f8ff;
+    padding-left: 10px;
+}
+
+
+
+/* SIDEBAR FOR DEVELOPER PAGE */
+.sidebar-dash {
+    width: 20%;
+    height: 150vh;
+    background: linear-gradient(to top, #473021, hsl(20, 41%, 21%)); /* Same brown gradient as login */
+    color: white;
+    padding: 2rem;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-dash h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.sidebar-dash .nav-dash {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar-dash .nav-dash li {
+    margin: 1.5rem 0;
+}
+
+.sidebar-dash .nav-dash li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.sidebar-dash .nav-dash li a:hover {
+    color: #f0f8ff;
+    padding-left: 10px;
+}
+
+
+
+/* Main Content Styling */
+.main-content {
+    flex: 1;
+    min-height: 125vh;
+    padding: 2rem;
+    background-color: #ffffff;
+    color: #333;
+}
+
+.dashboard-header h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.dashboard-header span {
+    color: hsl(20, 41%, 21%);
+    font-weight: bold;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 2rem;
+    justify-content: space-around;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        text-align: center;
+    }
+
+    .main-content {
+        padding: 1rem;
+    }
+
+    .dashboard-content {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+
+
+/*DASHBOARD BANNER PIC */
+.full-width-banner {
+    width: 100%; 
+    height: auto; 
+    margin-top: 1rem; 
+    margin-bottom: 2rem;
+    display: block; 
+    border-radius: 10px; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+
+/* SNACKBAR FOR LOGIN PAGE */
+.snackbar {
+    visibility: hidden;
+    background-color: #ff5252; 
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 0 auto 10px auto; 
+    font-size: 14px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    opacity: 0;
+    display: none; 
+}
+
+.snackbar.show {
+    visibility: visible;
+    opacity: 1;
+    display: block; 
+}
+
+
+
+/*SNACKBAR FOR SIGNUP PAGE */
+.snackbar1 {
+    visibility: hidden;
+    background-color: #4caf50; 
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 0 auto 10px auto;
+    font-size: 14px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    opacity: 0;
+    display: none; 
+}
+
+.snackbar1.show1 {
+    visibility: visible;
+    opacity: 1;
+    display: block;
+}
+
+
+
+/*DEVELOPER PAGE */
+.developer-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #f0f8ff;
+}
+
+/* Developer Card */
+.developer-card {
+    background: linear-gradient(to bottom, #ffffff, #f8f8f8);
+    border: 2px solid #473021;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    text-align: center;
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Card Hover Animation */
+.developer-card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.developer-card:hover:before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.5), transparent);
+    animation: card-glow 2s infinite;
+}
+
+@keyframes card-glow {
+    0% {
+        top: -100%;
+        left: -100%;
+    }
+    50% {
+        top: 100%;
+        left: 100%;
+    }
+    100% {
+        top: -100%;
+        left: -100%;
+    }
+}
+
+.developer-card img {
+    width: 200px;
+    height: 200px; 
+    border-radius: 50%; 
+    border: 5px solid #473021;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+    background-color: #ffffff; 
+    object-fit: cover; 
+}
+
+/* Hover Effect for Larger Image */
+.developer-card:hover img {
+    transform: scale(1.1) rotate(360deg); 
+}
+
+
+.developer-card h2 {
+    font-size: 1.5rem;
+    color: #473021;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.developer-card p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0.3rem 0;
+}
+
+/* Contact Details Styling */
+.contact-details p {
+    margin: 0.2rem 0;
+    font-size: 0.9rem;
+}
+
+.contact-details a {
+    color: #473021;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.contact-details a:hover {
+    color: #774b2d;
+    text-decoration: underline;
+}
+
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.developer-card {
+    animation: fade-in 0.8s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    .developer-card img {
+        width: 150px; 
+        height: 150px;
+    }
+
+    .developer-card {
+        width: 90%;
+    }
+}

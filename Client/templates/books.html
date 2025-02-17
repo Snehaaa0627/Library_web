@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <style>
+        .book-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw; 
+            align-items: stretch;
+            margin: 0; 
+            padding: 0; 
+        }
+
+        .book-content {
+            flex: 1;
+            min-height: 100vh;
+            padding: 2rem;
+            background-color: #ffffff;
+            color: #333;
+            width: 100%; 
+            
+        }
+
+        .book1-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            text-align: center;
+        }
+        .input-container {
+            margin-top: 20px;
+        }
+        input {
+            width: 60%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            background-color: #473021;
+            color: white;
+            transition: 0.3s ease;
+        }
+        button.request {
+            background-color: #473021;
+            color: white;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .full-width-banner-book{
+        width: 100%;
+        height: 300px; 
+        object-fit: cover; 
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        display: block;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .book-sidebar {
+        width: 20%;
+        min-height: 100vh;
+        background: linear-gradient(to top, #473021, hsl(20, 41%, 21%)); /* Same brown gradient as login */
+        color: white;
+        padding: 2rem;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .book-sidebar h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .book-sidebar .book-nav-dash {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .book-sidebar .book-nav-dash li {
+        margin: 1.5rem 0;
+    }
+
+    .book-sidebar .book-nav-dash li a {
+        color: white;
+        text-decoration: none;
+        font-size: 1.2rem;
+        display: block;
+        transition: all 0.3s ease;
+    }
+
+    .book-sidebar .book-nav-dash li a:hover {
+        color: #f0f8ff;
+        padding-left: 10px;
+    }
+    .snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 12px;
+        border-radius: 5px;
+        position: relative;
+        margin-top: 20px;
+        font-size: 1rem;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .snackbar.show {
+        visibility: visible;
+        opacity: 1;
+    }
+    .snackbar.success {
+        background-color: green;
+    }
+    .snackbar.error {
+        background-color: red;
+    }   
+
+    </style>
+    <!-- SEARCH BOOK FUNCTION -->
+    <script>
+        async function searchBook() {
+            let bookName = document.getElementById('bookName').value.trim();
+            
+            if (bookName === "") {
+                alert("Please enter a book name.");
+                return;
+            }
+    
+            try {
+                let response = await fetch(`/check_book?name=${encodeURIComponent(bookName)}`);
+                let data = await response.json();
+    
+                if (data.present) {
+                    alert(`Book '${bookName}' is present in the library.`);
+                } else {
+                    alert(`Book '${bookName}' is not present in the library.`);
+                }
+            } catch (error) {
+                console.error("Error checking book:", error);
+                alert("Error connecting to the server. Please try again.");
+            }
+    
+        }
+        // Request book function
+        async function requestBook() {
+            let bookName = document.getElementById('bookName').value.trim();
+    
+            if (bookName === "") {
+                showSnackbar("Please enter a book name.", "error");
+                return;
+            }
+    
+            try {
+                // Fetch the available book ID
+                let bookIdResponse = await fetch(`/get_book_id?name=${encodeURIComponent(bookName)}`);
+                let bookIdData = await bookIdResponse.json();
+    
+                if (!bookIdData.id) {
+                    showSnackbar(`Book '${bookName}' is currently unavailable.`, "error");
+                    return;
+                }
+    
+                let bookId = bookIdData.id;
+    
+                // Request the book
+                let requestResponse = await fetch(`/request_book`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ bookName, bookId })
+                });
+    
+                let requestData = await requestResponse.json();
+    
+                if (requestData.success) {
+                    showSnackbar(`Book '${bookName}' requested successfully. ID: ${bookId}`, "success");
+                } else {
+                    showSnackbar(`Book '${bookName}' is unavailable. Try again later.`, "error");
+                }
+            } catch (error) {
+                console.error("Error requesting book:", error);
+                showSnackbar("Error connecting to the server. Please try again.", "error");
+            }
+    
+            document.getElementById('bookName').value = "";
+        }
+        // SNACKBAR FUNCTION
+        function showSnackbar(message, type) {
+        let snackbar = document.getElementById("snackbar");
+        snackbar.textContent = message;
+        snackbar.className = `snackbar show ${type}`;
+        
+        setTimeout(() => {
+            snackbar.classList.remove("show");
+        }, 10000);
+    }
+    </script>
+</head>
+<body>
+    <div class="book-container">
+        <!-- Sidebar -->
+        <div class="book-sidebar">   
+            <h2>LIBRARY DASHBOARD</h2>
+            <ul class="book-nav-dash">
+                <li><a href="/dashboard">Home</a></li>
+                <li><a href="/books">Books</a></li>
+                <li><a href="/return">Return books</a></li>
+                <li><a href="/developer" class="active">Developers</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </div> 
+
+        <!-- Main Content -->
+        <div class="book-content">
+            <header class="dashboard-header">
+                <h1>Step Into a Library of Dreams and Discover the Magic!</h1>
+                <img src="/static/images/return_book_pic.jpg" alt="Welcome Banner" class="full-width-banner-book">
+            </header>
+            <div class="book1-container">
+                <h2>Please select your favorite book from our collection</h2>
+                <div class="input-container">
+                    <input type="text" placeholder="Enter book name" id="bookName">
+                    <br>
+                    <button onclick="searchBook()">Search</button>
+                    <button class="request" onclick="requestBook()">Request</button>
+                </div>
+                <div id="snackbar" class="snackbar"></div> 
+            </div>
+        </div>
+    </div>
+</body>
+</html>
