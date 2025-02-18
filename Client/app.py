@@ -18,7 +18,6 @@ library.register_user('user', 'user')
 def home():
     return redirect(url_for('login'))
 
-
 # LOGIN ROUTE
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -103,7 +102,6 @@ def check_book():
 
     is_present = library.check_present(book_name)
     return jsonify({"present": is_present})
-
 
 #GET BOOK ID ROUTE
 @app.route('/get_book_id', methods=['GET'])
