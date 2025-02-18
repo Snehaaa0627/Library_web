@@ -1,0 +1,176 @@
+/* General Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+
+}
+
+.logo {
+    font-size: 1.3rem; 
+    font-weight: bold;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2a0902;
+    padding: 15px 30px;
+    color: white;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 50px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    width: 100%;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    color: white;
+    overflow: hidden;
+}
+
+.hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    max-width: 600px;
+    z-index: 1;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+/* New Library Section */
+.dashboard-management {
+    background-color: #2a0902;
+    padding: 20px 10%;
+    text-align: center;
+}
+
+.dashboard-management h2 {
+    font-size: 2.5rem;
+    color: #f2f2f2;
+    margin-bottom: 15px;
+    margin-top: 0;
+}
+
+.dashboard-management p {
+    font-size: 1.2rem;
+    color: #f2f2f2;
+    margin-bottom: 40px;
+}
+
+/* Cards */
+/* Cards Container */
+.info-cards {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+/* Standard Card Styles */
+.card {
+    flex:1;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 350px;
+    min-width: 280px;
+    height: auto; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+.card img {
+    width: 100%;
+    height: 200px; 
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+
+.card h3 {
+    font-size: 1.5rem;
+    color: #2a0902;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.manage-btn {
+    background-color: transparent; 
+    color: #2a0902; 
+    border: 2px solid #2a0902; 
+    padding: 12px 24px; 
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 50px; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%; 
+    max-width: 280px; 
+    text-align: center;
+    align-self: center; 
+    margin-top: auto;
+}
+
+/* Hover Effect */
+.manage-btn:hover {
+    background-color:#eed9d4; 
+    color: #2a0902; 
+    transform: scale(1.05); 
+}
+
+

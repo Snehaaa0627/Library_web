@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from LibraryInterface import LibraryInterface
 
+
 # Initialize Flask
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  
@@ -18,7 +19,7 @@ library.register_user('user', 'user')
 def home():
     return redirect(url_for('login'))
 
-# LOGIN ROUTE
+#Login Route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -31,7 +32,6 @@ def login():
         else:
             return render_template('login.html', error="Invalid username or password")
     return render_template('login.html',error=None)
-
 
 # SIGNUP ROUTE 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -146,7 +146,6 @@ def return_book():
     return render_template('return.html', borrowed_books=borrowed_books)
 
 
-
 # RETURN_BOOK_ACTION ROUTE
 @app.route('/return_book_action', methods=['POST'])
 def return_book_action():
@@ -166,12 +165,15 @@ def return_book_action():
     else:
         return jsonify({"success": False, "error": "Failed to return book"}), 500
 
-
 # DEVELOPER ROUTE
 @app.route('/developer')
 def developer():
     return render_template('developer.html')
 
+#Manage Books section
+@app.route('/manage_books')
+def manage_books():
+    return render_template('manage_books.html')
 
 #LOGOUT ROUTE
 @app.route('/logout')
@@ -182,6 +184,7 @@ def logout():
         print(f"Room allocation reset for {username}")
         session.pop('username', None)
     return redirect(url_for('login'))
+
 
 if __name__ == '__main__':
     print("Starting Flask server...")

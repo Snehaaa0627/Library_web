@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Management</title>
+    <link rel="stylesheet" type="text/css" href="/static/staff_style.css">
+    <style>
+        body {
+            background-color: white; 
+            color: #333; 
+        }
+
+        /* Navbar Customization */
+        .navbar {
+            background-color: #2a0902; 
+        }
+
+        .nav-links a {
+            color: white;
+        }
+
+        .dashboard-management {
+            background-color: #f8f8f8; 
+            padding: 60px 10%;
+            text-align: center;
+        }
+
+        .dashboard-management h2 {
+            color: #2a0902;
+        }
+
+        .dashboard-management p {
+            color: #555;
+        }
+
+        /* Table Section */
+        .rooms-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .rooms-table th, .rooms-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .rooms-table th {
+            background-color: #2a0902; 
+            color: white;
+        }
+
+        .rooms-table td {
+            background-color: #fff;
+        }
+
+        .delete-btn {
+            background: #2a0902;
+
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c08383;
+        }
+
+        /* Modal Styling for Adding Book */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 380px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-content form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; 
+        }
+
+        .modal h2 {
+            color: #2a0902;
+        }
+
+        .modal label {
+            color: #333;
+        }
+
+        .modal input {
+            border: 1px solid #ddd;
+        }
+
+        /* Button Hover Effect */
+        .manage-btn:hover {
+            background-color: #eed9d4;
+            color: #2a0902;
+        }
+
+        .add-btn{
+            background-color: #2a0902;
+            color: white;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+        }
+        h2 {
+            margin-bottom: 15px;
+            color: #2a0902;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            background-color: #2a0902;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #40120a;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">STAFF DASHBOARD</div>
+        <ul class="nav-links">
+            <li><a href="/staff_dashboard">Home</a></li>
+            <li><a href="/manage_books">Book Management</a></li>
+            <li><a href="/staff_permissions">Staff Permissions</a></li>
+            <li><a href="/staff_logout">Logout</a></li>
+        </ul>
+    </nav>
+    <!-- Book Management Section -->
+    <section class="dashboard-management">
+        <h2>Manage Library Rooms</h2>
+        <button class="add-btn" onclick="openModal()">+ Add Room</button>
+
+        <!-- Rooms Table -->
+        <table class="rooms-table">
+            <thead>
+                <tr>
+                    <th>Room Name</th>
+                    <th>Room Capacity</th>
+                    <th>Seats Occupied</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="rooms-list">
+                {% for room in rooms %}
+                <tr id="room-{{ room.id }}">
+                    <td>{{ room.name }}</td>
+                    <td>{{ room.capacity }}</td>
+                    <td>{{ room.seats_occupied }}</td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteRoom('{{ room.name }}')">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>            
+        </table>
+   <!-- Add Book Modal -->
+<div id="addRoomModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Add New Room</h2>
+        <form id="addRoomForm">
+            <div class="form-group">
+                <label for="room_name">Room Name:</label>
+                <input type="text" id="room_name" name="room_name" required>
+            </div>
+            <div class="form-group">
+                <label for="room_capacity">Room Capacity:</label>
+                <input type="number" id="room_capacity" name="room_capacity" required>
+            </div>
+            <div class="form-group">
+                <label for="position">Coordinates (x, y, phi):</label>
+                <input type="text" id="position" name="position" required>
+            </div>      
+            <div class="form-group">
+                <label for="room_type">Is this a staff-only room?</label>
+                <select id="room_type" name="room_type" required>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>              
+            <button type="submit" class="submit-btn">Add Room</button>
+        </form>
+    </div>
+</div>
+<script>
+function openModal() {
+    let modal = document.getElementById("addRoomModal");
+    modal.style.display = "flex"; 
+
+    // Allow time for modal to become visible before focusing
+    setTimeout(() => {
+        document.getElementById("roomName").focus();
+    }, 100);
+}
+
+function closeModal() {
+    document.getElementById("addRoomModal").style.display = "none";
+}
+
+// Ensure modal is hidden when the page loads
+document.getElementById("addRoomForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    let roomName = document.getElementById("room_name").value.trim();
+    let capacity = parseInt(document.getElementById("room_capacity").value.trim(), 10);
+    let coordinatesInput = document.getElementById("position").value.trim();
+    let isStaffOnly = document.getElementById("room_type").value; // '1' or '0'
+
+    // Convert position input to an array of numbers
+    let coordinates = coordinatesInput.split(" ").map(Number);
+
+    // Ensure the input is valid
+    if (coordinates.length !== 3 || coordinates.some(isNaN)) {
+        alert("Please enter valid coordinates in the format: x y z (e.g., 0 0 0)");
+        return;
+    }
+
+    // Ensure position is sent as an array (tuple-compatible)
+    let formattedCoordinates = [coordinates[0], coordinates[1], coordinates[2]];
+
+    let roomData = {
+        room_name: roomName,
+        capacity: capacity,
+        position: formattedCoordinates, // Send as an array
+        hide_room: parseInt(isStaffOnly, 10) // Ensure it's an integer
+    };
+
+    fetch("/add_room", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(roomData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Server Response:", data);
+        if (data.status === "success") {
+            alert("Room added successfully!");
+            location.reload();
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred while adding the room.");
+    });
+});
+
+
+// Delete room function
+function deleteRoom(roomName) {
+    if (confirm(`Are you sure you want to delete ${roomName}?`)) {
+        fetch(`/remove_room/${encodeURIComponent(roomName)}`, { method: "POST" })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (data.status === "success") {
+                document.querySelectorAll("#rooms-list tr").forEach(row => {
+                    if (row.children[0].textContent.trim() === roomName) {
+                        row.remove();
+                    }
+                });
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+}
+</script>
+</body>
+</html>

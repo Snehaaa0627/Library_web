@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Permissions</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            width: 100%;
+            background: #2a0902;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #e0e0e0;
+        }
+
+        h1 {
+            margin-top: 80px;
+            font-size: 26px;
+            font-weight: 600;
+            text-align: center;
+            color: #2a0902;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: white;
+            padding: 40px;
+            width: 450px;
+            margin-top: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .form-container h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #2a0902;
+        }
+
+        .submit-btn {
+            background-color: #2a0902;
+            color: white;
+            padding: 12px;
+            border: none;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #40120a;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">STAFF DASHBOARD</div>
+        <ul class="nav-links">
+            <li><a href="/staff_dashboard">Home</a></li>
+            <li><a href="/manage_books">Book Management</a></li>
+            <li><a href="/manage_rooms">Room Management</a></li>
+            <li><a href="/staff_logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <h1>Staff Permissions</h1>
+
+    <!-- Permission Form -->
+    <div class="form-container">
+        <h2>Modify Staff Permissions</h2>
+        <form id="staffPermissionsForm">
+            <div class="form-group">
+                <label for="staff_name">Staff Name:</label>
+                <input type="text" id="staff_name" name="staff_name" required>
+            </div>
+            <div class="form-group">
+                <label for="permission_level">Permission Level (1-5):</label>
+                <input type="number" id="permission_level" name="permission_level" min="1" max="5" required>
+            </div>
+            <button type="submit" class="submit-btn">Set Permissions</button>
+        </form>
+    </div>
+
+ <script>
+    document.getElementById("staffPermissionsForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent page reload
+
+    let staffNameInput = document.getElementById("staff_name");
+    let permissionLevelInput = document.getElementById("permission_level");
+
+    let staffName = staffNameInput.value.trim();
+    let permissionLevel = permissionLevelInput.value.trim();
+
+    if (!staffName || isNaN(permissionLevel) || permissionLevel < 1 || permissionLevel > 5) {
+        alert("❌ Please enter a valid staff name and permission level (1-5).");
+        return;
+    }
+
+    let staffData = {
+        staff_name: staffName,
+        permission_level: parseInt(permissionLevel, 10)
+    };
+
+    fetch("/set_staff_perms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(staffData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            alert(data.message);
+            // Clear the input fields on success
+            staffNameInput.value = "";
+            permissionLevelInput.value = "";
+        } else {
+            alert("❌ " + data.message);
+        }
+    })
+    .catch(error => alert("An error occurred while modifying permissions."));
+});
+
+ </script>
+
+</body>
+</html>

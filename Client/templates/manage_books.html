@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Management</title>
+    <link rel="stylesheet" type="text/css" href="/static/staff_style.css">
+    <style>
+      /* Specific Styles for Manage Books Page */
+body {
+    background-color: white; /* Set background to white */
+    color: #333; /* Adjust text color for better visibility on white background */
+}
+
+/* Navbar Customization */
+.navbar {
+    background-color: #2a0902; /* Keep the navbar's original color */
+}
+
+.nav-links a {
+    color: white;
+}
+
+.dashboard-management {
+    background-color: #f8f8f8; /* Slight light background for the management section */
+    padding: 60px 10%;
+    text-align: center;
+}
+
+.dashboard-management h2 {
+    color: #2a0902; /* Keep the original text color */
+}
+
+.dashboard-management p {
+    color: #555; /* Adjust text color */
+}
+
+/* Table Section */
+.books-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.books-table th, .books-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.books-table th {
+    background-color: #2a0902; /* Keep header color */
+    color: white;
+}
+
+.books-table td {
+    background-color: #fff;
+}
+
+.delete-btn {
+    background: #2a0902;
+
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #c08383;
+}
+
+/* Modal Styling for Adding Book */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 380px;
+    text-align: center;
+    position: relative;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between elements */
+}
+
+.modal h2 {
+    color: #2a0902;
+}
+
+.modal label {
+    color: #333;
+}
+
+.modal input {
+    border: 1px solid #ddd;
+}
+
+/* Button Hover Effect */
+.manage-btn:hover {
+    background-color: #eed9d4;
+    color: #2a0902;
+}
+
+.add-btn{
+    background-color: #2a0902;
+    color: white;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #555;
+}
+h2 {
+    margin-bottom: 15px;
+    color: #2a0902;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.submit-btn {
+    background-color: #2a0902;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #40120a;
+}
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">STAFF DASHBOARD</div>
+        <ul class="nav-links">
+            <li><a href="/staff_dashboard">Home</a></li>
+            <li><a href="/manage_rooms">Room Management</a></li>
+            <li><a href="/staff_permissions">Staff Permissions</a></li>
+            <li><a href="/staff_logout">Logout</a></li>
+        </ul>
+    </nav>
+    <!-- Book Management Section -->
+    <section class="dashboard-management">
+        <h2>Manage Library Books</h2>
+        <button class="add-btn" onclick="openModal()">+ Add Book</button>
+
+        <!-- Books Table -->
+        <table class="books-table">
+            <thead>
+                <tr>
+                    <th>Book id</th>
+                    <th>Book Name</th>
+                    <th>Coordinates</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="books-list">
+                {% for book in books %}
+                <tr id="book-{{ book.id }}">
+                    <td>{{ book.id }}</td>
+                    <td>{{ book.name }}</td>
+                    <td>{{ book.position }}</td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteBook('{{ book.id }}')">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>            
+        </table>
+    </section>
+
+   <!-- Add Book Modal -->
+<div id="addBookModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Add New Book</h2>
+        <form id="addBookForm">
+            <div class="form-group">
+                <label for="book_name">Book Name:</label>
+                <input type="text" id="book_name" name="book_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="position">Coordinates (Room, Row, Col):</label>
+                <input type="text" id="position" name="position" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">Add Book</button>
+        </form>
+    </div>
+</div>
+
+    <script>
+       // Open Modal
+function openModal() {
+    let modal = document.getElementById("addBookModal");
+    modal.style.display = "flex"; // Show modal properly centered
+}
+
+// Close Modal
+function closeModal() {
+    let modal = document.getElementById("addBookModal");
+    modal.style.display = "none"; // Hide modal
+}
+
+// Ensure modal is hidden when the page loads
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("addBookModal").style.display = "none";
+});
+
+
+        // Add Book AJAX Request
+        $("#addBookForm").submit(function(event) {
+            event.preventDefault();
+            let book_name = $("#book_name").val();
+            let position = $("#position").val();
+
+            $.ajax({
+                url: "/add_book",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ book_name: book_name, position: position }),
+                success: function(response) {
+                    alert(response.message);
+                    if (response.status === "success") {
+                        location.reload();
+                    }
+                }
+            });
+        });
+
+        // Delete Book AJAX Request
+        function deleteBook(book_id) {
+            if (confirm("Are you sure you want to delete this book?")) {
+                $.ajax({
+                    url: "/remove_book/" + book_id,
+                    type: "POST",
+                    success: function(response) {
+                        alert(response.message);
+                        if (response.status === "success") {
+                            $("#book-" + book_id).remove();
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
