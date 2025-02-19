@@ -6,176 +6,174 @@
     <title>Book Management</title>
     <link rel="stylesheet" type="text/css" href="/static/staff_style.css">
     <style>
-      /* Specific Styles for Manage Books Page */
-body {
-    background-color: white; /* Set background to white */
-    color: #333; /* Adjust text color for better visibility on white background */
-}
+        body {
+            background-color: white; 
+            color: #333; 
+        }
 
-/* Navbar Customization */
-.navbar {
-    background-color: #2a0902; /* Keep the navbar's original color */
-}
 
-.nav-links a {
-    color: white;
-}
+        .navbar {
+            background-color: #2a0902; 
+        }
 
-.dashboard-management {
-    background-color: #f8f8f8; /* Slight light background for the management section */
-    padding: 60px 10%;
-    text-align: center;
-}
+        .nav-links a {
+            color: white;
+        }
 
-.dashboard-management h2 {
-    color: #2a0902; /* Keep the original text color */
-}
+        .dashboard-management {
+            background-color: #f8f8f8; 
+            padding: 60px 10%;
+            text-align: center;
+        }
 
-.dashboard-management p {
-    color: #555; /* Adjust text color */
-}
+        .dashboard-management h2 {
+            color: #2a0902; 
+        }
 
-/* Table Section */
-.books-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
+        .dashboard-management p {
+            color: #555; 
+        }
 
-.books-table th, .books-table td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
+        /* Table Section */
+        .books-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
 
-.books-table th {
-    background-color: #2a0902; /* Keep header color */
-    color: white;
-}
+        .books-table th, .books-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
 
-.books-table td {
-    background-color: #fff;
-}
+        .books-table th {
+            background-color: #2a0902; 
+            color: white;
+        }
 
-.delete-btn {
-    background: #2a0902;
+        .books-table td {
+            background-color: #fff;
+        }
 
-    color: white;
-}
+        .delete-btn {
+            background: #2a0902;
 
-.delete-btn:hover {
-    background: #c08383;
-}
+            color: white;
+        }
 
-/* Modal Styling for Adding Book */
+        .delete-btn:hover {
+            background: #c08383;
+        }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-.modal-content {
-    background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    width: 380px;
-    text-align: center;
-    position: relative;
-}
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.modal-content form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Space between elements */
-}
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 380px;
+            text-align: center;
+            position: relative;
+        }
 
-.modal h2 {
-    color: #2a0902;
-}
+        .modal-content form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; 
+        }
 
-.modal label {
-    color: #333;
-}
+        .modal h2 {
+            color: #2a0902;
+        }
 
-.modal input {
-    border: 1px solid #ddd;
-}
+        .modal label {
+            color: #333;
+        }
 
-/* Button Hover Effect */
-.manage-btn:hover {
-    background-color: #eed9d4;
-    color: #2a0902;
-}
+        .modal input {
+            border: 1px solid #ddd;
+        }
 
-.add-btn{
-    background-color: #2a0902;
-    color: white;
-    padding: 8px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
 
-.close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 20px;
-    cursor: pointer;
-    color: #555;
-}
-h2 {
-    margin-bottom: 15px;
-    color: #2a0902;
-}
+        .manage-btn:hover {
+            background-color: #eed9d4;
+            color: #2a0902;
+        }
 
-.form-group {
-    margin-bottom: 15px;
-    text-align: left;
-}
+        .add-btn{
+            background-color: #2a0902;
+            color: white;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
 
-.form-group label {
-    display: block;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
-}
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+        }
+        h2 {
+            margin-bottom: 15px;
+            color: #2a0902;
+        }
 
-.form-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-}
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
 
-.submit-btn {
-    background-color: #2a0902;
-    color: white;
-    padding: 10px;
-    border: none;
-    width: 100%;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
 
-.submit-btn:hover {
-    background-color: #40120a;
-}
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            background-color: #2a0902;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #40120a;
+        }
 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -245,44 +243,41 @@ h2 {
 
     <script>
        // Open Modal
-function openModal() {
-    let modal = document.getElementById("addBookModal");
-    modal.style.display = "flex"; // Show modal properly centered
-}
+    function openModal() {
+        let modal = document.getElementById("addBookModal");
+        modal.style.display = "flex"; 
+    }
 
-// Close Modal
-function closeModal() {
-    let modal = document.getElementById("addBookModal");
-    modal.style.display = "none"; // Hide modal
-}
-
-// Ensure modal is hidden when the page loads
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("addBookModal").style.display = "none";
-});
+    // Close Modal
+    function closeModal() {
+        let modal = document.getElementById("addBookModal");
+        modal.style.display = "none"; 
+    }
 
 
-        // Add Book AJAX Request
-        $("#addBookForm").submit(function(event) {
-            event.preventDefault();
-            let book_name = $("#book_name").val();
-            let position = $("#position").val();
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("addBookModal").style.display = "none";
+    });
 
-            $.ajax({
-                url: "/add_book",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({ book_name: book_name, position: position }),
-                success: function(response) {
-                    alert(response.message);
-                    if (response.status === "success") {
-                        location.reload();
+            $("#addBookForm").submit(function(event) {
+                event.preventDefault();
+                let book_name = $("#book_name").val();
+                let position = $("#position").val();
+
+                $.ajax({
+                    url: "/add_book",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ book_name: book_name, position: position }),
+                    success: function(response) {
+                        alert(response.message);
+                        if (response.status === "success") {
+                            location.reload();
+                        }
                     }
-                }
+                });
             });
-        });
 
-        // Delete Book AJAX Request
         function deleteBook(book_id) {
             if (confirm("Are you sure you want to delete this book?")) {
                 $.ajax({
@@ -298,6 +293,5 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     </script>
-
 </body>
 </html>

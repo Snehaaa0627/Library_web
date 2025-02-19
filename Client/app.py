@@ -13,7 +13,6 @@ library = LibraryInterface("127.0.0.1", 5555)
 library.register_user('admin', 'admin')
 library.register_user('user', 'user')
 
-#Main code starts here
 # Define Routes
 @app.route('/')
 def home():
@@ -70,7 +69,6 @@ def dashboard():
         if allocation_success:
             success_message = f'You have been successfully allocated to Room {room_name}.'
 
-            # Re-fetch updated room statistics
             rooms = library.get_room_statistics()
             rooms_data = [
                 {

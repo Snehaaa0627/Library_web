@@ -1,13 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from LibraryStaffInterface import LibraryStaffInterface
 
-
 # Initialize Flask
 staff = Flask(__name__)
 staff.secret_key = 'your_secret_key'  
 
 library = LibraryStaffInterface("127.0.0.1", 5555)
-
 
 # create test environment
 library = LibraryStaffInterface("127.0.0.1", 5555)
@@ -93,45 +91,47 @@ def manage_rooms():
 
     return render_template('room_management.html', rooms=rooms)
 
-
+# ADD ROOM
 @staff.route('/add_room', methods=['POST'])
 def add_room():
     try:
-        data = request.json  
-        room_name = data.get("room_name")
-        capacity = int(data.get("capacity"))
-        
-        room_type = str(data.get("room_type", "").strip())  # Convert input to string
-        if room_type not in ["1", "0"]:
-            return jsonify({"status": "error", "message": "Invalid input! Enter '1' for staff-only, '0' for public"}), 400
-        
-        is_staff_only = int(room_type)  # Convert "1" -> 1, "0" -> 0
+        data = request.get_json()
+        print("Received data:", data)  # Debugging
 
-        # Validate position
-        position_raw = data.get("position", "0 0 0")
-        position_parts = position_raw.split()
-        if len(position_parts) != 3:
-            return jsonify({"status": "error", "message": "Position must contain exactly three numbers"}), 400
-        
+        room_name = str(data.get("room_name", "")).strip()
+        capacity = data.get("room_capacity", 0)
+        position = data.get("coordinates", "0 0 0")
+        room_type = int(data.get("staff_only", "n").lower() == "y")
+
         try:
-            position = tuple(map(float, position_parts))  # Convert to float
+            capacity = int(capacity)
         except ValueError:
-            return jsonify({"status": "error", "message": "Position must contain valid numbers"}), 400
+            return jsonify({"message": "Invalid room capacity", "status": "error"})
 
-        # Add room
-        if library.add_room(room_name, capacity, position[0], position[1], position[2], is_staff_only):
-            return jsonify({"status": "success", "message": "Room added successfully!"})
+        position = list(map(float, position.split()))
+        room_type = int(room_type == "y")
+
+        print(f"DEBUG: Calling library.add_room({room_name}, {capacity}, {position}, 'admin', {room_type})")
+        success = library.add_room(room_name, capacity, position, "admin", room_type)
+
+        print(f"DEBUG: library.add_room() returned {success}")
+
+        if success:
+            return jsonify({"message": "Room added successfully!", "status": "success"})
         else:
-            return jsonify({"status": "error", "message": "Failed to add room"}), 500
+            print("Library function returned False")
+            return jsonify({"message": "Error adding room.", "status": "error"})
 
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        print(f"Error: {e}")
+        return jsonify({"message": f"Server error: {e}", "status": "error"})
+
 
 
 # REMOVE ROOM
 @staff.route('/remove_room/<room_name>', methods=['POST'])
 def remove_room(room_name):
-    if library.remove_room(room_name):  # Now removing by name
+    if library.remove_room(room_name):  
         return jsonify({"message": "Room removed successfully!", "status": "success"})
     else:
         return jsonify({"message": "Error removing room.", "status": "error"})
@@ -140,6 +140,7 @@ def remove_room(room_name):
 def staff_permissions():
     return render_template("staff_permissions.html")
 
+#Staff Permission
 @staff.route("/set_staff_perms", methods=["POST"])
 def set_staff_perms():
     try:
@@ -147,7 +148,6 @@ def set_staff_perms():
         staff_name = data["staff_name"]
         permission_level = int(data["permission_level"])
 
-        # Call the actual function to set permissions
         success = library.set_staff_perms(staff_name, permission_level)
 
         if success:
@@ -168,3 +168,4 @@ def staff_logout():
 if __name__ == '__main__':
     print("Starting Flask server...")
     staff.run(debug=True)
+

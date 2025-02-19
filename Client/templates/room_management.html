@@ -11,7 +11,6 @@
             color: #333; 
         }
 
-        /* Navbar Customization */
         .navbar {
             background-color: #2a0902; 
         }
@@ -34,7 +33,6 @@
             color: #555;
         }
 
-        /* Table Section */
         .rooms-table {
             width: 100%;
             border-collapse: collapse;
@@ -66,9 +64,8 @@
             background: #c08383;
         }
 
-        /* Modal Styling for Adding Book */
         .modal {
-            display: none;
+            display: none; 
             position: fixed;
             z-index: 1000;
             left: 0;
@@ -76,10 +73,10 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
             justify-content: center;
             align-items: center;
         }
+
 
         .modal-content {
             background-color: white;
@@ -109,7 +106,6 @@
             border: 1px solid #ddd;
         }
 
-        /* Button Hover Effect */
         .manage-btn:hover {
             background-color: #eed9d4;
             color: #2a0902;
@@ -218,118 +214,93 @@
                 {% endfor %}
             </tbody>            
         </table>
-   <!-- Add Book Modal -->
+        <!-- Add Room Modal -->
 <div id="addRoomModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Add New Room</h2>
+        <h2>Add Room</h2>
         <form id="addRoomForm">
             <div class="form-group">
-                <label for="room_name">Room Name:</label>
-                <input type="text" id="room_name" name="room_name" required>
+                <label>Enter room name:</label>
+                <input type="text" id="roomName" required>
             </div>
             <div class="form-group">
-                <label for="room_capacity">Room Capacity:</label>
-                <input type="number" id="room_capacity" name="room_capacity" required>
+                <label>Enter room capacity:</label>
+                <input type="number" id="roomCapacity" required>
             </div>
             <div class="form-group">
-                <label for="position">Coordinates (x, y, phi):</label>
-                <input type="text" id="position" name="position" required>
-            </div>      
+                <label>Enter coordinates (x y phi):</label>
+                <input type="text" id="roomCoordinates" placeholder="e.g. 0 0 0" required>
+            </div>
             <div class="form-group">
-                <label for="room_type">Is this a staff-only room?</label>
-                <select id="room_type" name="room_type" required>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select>
-            </div>              
-            <button type="submit" class="submit-btn">Add Room</button>
+                <label>Is staff-only room (Y/n):</label>
+                <input type="text" id="staffOnly" placeholder="Y or n" required>
+            </div>
+            <button type="button" class="submit-btn" onclick="addRoom()">Add Room</button>
         </form>
     </div>
 </div>
 <script>
-function openModal() {
-    let modal = document.getElementById("addRoomModal");
-    modal.style.display = "flex"; 
-
-    // Allow time for modal to become visible before focusing
-    setTimeout(() => {
-        document.getElementById("roomName").focus();
-    }, 100);
-}
-
-function closeModal() {
-    document.getElementById("addRoomModal").style.display = "none";
-}
-
-// Ensure modal is hidden when the page loads
-document.getElementById("addRoomForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent default form submission
-
-    let roomName = document.getElementById("room_name").value.trim();
-    let capacity = parseInt(document.getElementById("room_capacity").value.trim(), 10);
-    let coordinatesInput = document.getElementById("position").value.trim();
-    let isStaffOnly = document.getElementById("room_type").value; // '1' or '0'
-
-    // Convert position input to an array of numbers
-    let coordinates = coordinatesInput.split(" ").map(Number);
-
-    // Ensure the input is valid
-    if (coordinates.length !== 3 || coordinates.some(isNaN)) {
-        alert("Please enter valid coordinates in the format: x y z (e.g., 0 0 0)");
-        return;
+    // Open Modal
+    function openModal() {
+        document.getElementById("addRoomModal").style.display = "flex";
     }
 
-    // Ensure position is sent as an array (tuple-compatible)
-    let formattedCoordinates = [coordinates[0], coordinates[1], coordinates[2]];
+    // Close Modal
+    function closeModal() {
+        document.getElementById("addRoomModal").style.display = "none";
+    }
 
-    let roomData = {
-        room_name: roomName,
-        capacity: capacity,
-        position: formattedCoordinates, // Send as an array
-        hide_room: parseInt(isStaffOnly, 10) // Ensure it's an integer
-    };
+    // Add Room Function
+    function addRoom() {
+        const roomName = document.getElementById("roomName").value.trim();
+        const roomCapacity = document.getElementById("roomCapacity").value.trim();
+        const roomCoordinates = document.getElementById("roomCoordinates").value.trim();
+        const staffOnly = document.getElementById("staffOnly").value.trim();
 
-    fetch("/add_room", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(roomData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Server Response:", data);
-        if (data.status === "success") {
-            alert("Room added successfully!");
-            location.reload();
-        } else {
-            alert("Error: " + data.message);
+        if (!roomName || !roomCapacity || !roomCoordinates || !staffOnly) {
+            alert("All fields are required!");
+            return;
         }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("An error occurred while adding the room.");
-    });
-});
 
-
-// Delete room function
-function deleteRoom(roomName) {
-    if (confirm(`Are you sure you want to delete ${roomName}?`)) {
-        fetch(`/remove_room/${encodeURIComponent(roomName)}`, { method: "POST" })
+        fetch("/add_room", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                room_name: roomName,
+                room_capacity: roomCapacity,
+                coordinates: roomCoordinates,
+                staff_only: staffOnly
+            })
+        })
         .then(response => response.json())
         .then(data => {
             alert(data.message);
             if (data.status === "success") {
-                document.querySelectorAll("#rooms-list tr").forEach(row => {
-                    if (row.children[0].textContent.trim() === roomName) {
-                        row.remove();
-                    }
-                });
+                location.reload(); 
             }
         })
         .catch(error => console.error("Error:", error));
     }
-}
+
+    // Delete room function
+    function deleteRoom(roomName) {
+        if (confirm(`Are you sure you want to delete ${roomName}?`)) {
+            fetch(`/remove_room/${encodeURIComponent(roomName)}`, { method: "POST" })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.status === "success") {
+                    document.querySelectorAll("#rooms-list tr").forEach(row => {
+                        if (row.children[0].textContent.trim() === roomName) {
+                            row.remove();
+                        }
+                    });
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    }
 </script>
 </body>
 </html>
