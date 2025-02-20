@@ -292,7 +292,7 @@ body, html {
 .sidebar-dash {
     width: 20%;
     height: 150vh;
-    background: linear-gradient(to top, #473021, hsl(20, 41%, 21%)); /* Same brown gradient as login */
+    background: linear-gradient(to top, #473021, hsl(20, 41%, 21%)); 
     color: white;
     padding: 2rem;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
@@ -506,7 +506,6 @@ body, html {
     object-fit: cover; 
 }
 
-/* Hover Effect for Larger Image */
 .developer-card:hover img {
     transform: scale(1.1) rotate(360deg); 
 }
@@ -525,7 +524,6 @@ body, html {
     margin: 0.3rem 0;
 }
 
-/* Contact Details Styling */
 .contact-details p {
     margin: 0.2rem 0;
     font-size: 0.9rem;

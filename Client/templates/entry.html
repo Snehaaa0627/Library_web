@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library</title>
+    <link rel="stylesheet" type="text/css" href="/static/staff_style.css">
+    <script>
+        function playVideo() {
+            const videoContainer = document.getElementById('videoContainer');
+            const overlay = document.getElementById('overlayBackground');
+            const tourVideo = document.getElementById('fullScreenVideo');
+            const bannerVideo = document.getElementById('libraryVideo');
+
+            bannerVideo.pause();
+
+            videoContainer.style.display = 'block';
+            overlay.style.display = 'block';
+            tourVideo.play();
+
+            tourVideo.onended = () => {
+                closeVideo();
+            };
+
+            overlay.onclick = () => {
+                closeVideo();
+            };
+
+        document.addEventListener('keydown', handleEsc);
+        document.addEventListener('fullscreenchange', handleFullScreenExit);
+        document.addEventListener('webkitfullscreenchange', handleFullScreenExit); 
+        document.addEventListener('msfullscreenchange', handleFullScreenExit); 
+        }
+
+        function handleEsc(event) {
+            if (event.key === 'Escape') {
+                escPressed = true;
+                closeVideo();
+            }
+        }
+
+        function closeVideo() {
+            const videoContainer = document.getElementById('videoContainer');
+            const overlay = document.getElementById('overlayBackground');
+            const tourVideo = document.getElementById('fullScreenVideo');
+            const bannerVideo = document.getElementById('libraryVideo');
+
+            tourVideo.pause();
+            tourVideo.currentTime = 0;
+
+            bannerVideo.play();
+
+            videoContainer.style.display = 'none';
+            overlay.style.display = 'none';
+
+            document.removeEventListener('keydown', handleEsc);
+            document.removeEventListener('fullscreenchange', handleFullScreenExit);
+            document.removeEventListener('webkitfullscreenchange', handleFullScreenExit);
+            document.removeEventListener('msfullscreenchange', handleFullScreenExit);
+
+        escPressed = false;
+
+            window.location.href = '/entry';
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">CENTRAL LIBRARY</div>
+        <ul class="nav-links">
+            <li><a href="/login">User Login</a></li>
+            <li><a href="/staff_login">Staff Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <video autoplay muted loop class="hero-video" id="libraryVideo">
+            <source src="static/videos/dashboard.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="overlay"></div>
+        <div class="hero-content">
+            <h1>Discover, Learn, and Grow</h1>
+            <p>Access a vast collection of books, journals, and digital resources to enhance your knowledge. Stay updated with the latest arrivals and manage your library experience effortlessly.</p>
+            <button class="tour-btn" onclick="playVideo()">Library Tour</button>
+        </div>
+        <div id="overlayBackground"></div>
+        <div id="videoContainer">
+            <video id="fullScreenVideo" controls>
+                <source src="static/videos/dashboard.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </section>
+</body>
+</html>

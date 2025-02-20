@@ -1,22 +1,29 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from LibraryInterface import LibraryInterface
-
+from LibraryStaffInterface import LibraryStaffInterface
 
 # Initialize Flask
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  
 
 library = LibraryInterface("127.0.0.1", 5555)
+library1 = LibraryStaffInterface("127.0.0.1", 5555)
+
 
 # create test environment
 library = LibraryInterface("127.0.0.1", 5555)
-library.register_user('admin', 'admin')
+library1.register_user('admin', 'admin')
 library.register_user('user', 'user')
 
-# Define Routes
+#Entry Page
 @app.route('/')
 def home():
-    return redirect(url_for('login'))
+    return redirect(url_for('entry'))
+
+@app.route('/entry')
+def entry():
+    return render_template('entry.html')
+
 
 #Login Route
 @app.route('/login', methods=['GET', 'POST'])
@@ -168,11 +175,6 @@ def return_book_action():
 def developer():
     return render_template('developer.html')
 
-#Manage Books section
-@app.route('/manage_books')
-def manage_books():
-    return render_template('manage_books.html')
-
 #LOGOUT ROUTE
 @app.route('/logout')
 def logout():
@@ -182,6 +184,154 @@ def logout():
         print(f"Room allocation reset for {username}")
         session.pop('username', None)
     return redirect(url_for('login'))
+
+
+
+# STAFF LOGIN ROUTE
+@app.route('/staff_login', methods=['GET', 'POST'])
+def staff_login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        if library1.authenticate_staff(username, password):
+            session['username'] = username
+            return redirect(url_for('staff_dashboard'))
+        else:
+            return render_template('staff_login.html', error="Invalid username or password")
+    return render_template('staff_login.html',error=None)
+
+# STAFF SIGNUP ROUTE 
+@app.route('/staff_signup', methods=['GET', 'POST'])
+def staff_signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        library1.register_staff(username,password)
+        return render_template('staff_signup.html', success="Sign-up successful! You can now log in.")
+    return render_template('staff_signup.html', success=None)
+
+#staff dashboard
+@app.route('/staff_dashboard')
+def staff_dashboard():
+    username = session.get('username')
+    if not username:
+        return redirect(url_for('staff_login'))
+    return render_template('staff_dashboard.html')
+
+# STAFF Book Management
+@app.route('/manage_books')
+def manage_books():
+    raw_books = library1.get_book_statistics()  
+    books = [
+        {"id": book[0], "name": book[1], "position": f"Room {book[2]}, Row {book[3]}, Col {book[4]}"}
+        for book in raw_books
+    ]
+    return render_template('manage_books.html', books=books)
+
+
+# STAFF Add a new book
+@app.route('/add_book', methods=['POST'])
+def add_book():
+    data = request.get_json()
+    book_name = data.get("book_name")
+    position = data.get("position")
+
+    if library1.add_book(book_name, position):
+        return jsonify({"message": "Book added successfully!", "status": "success"})
+    else:
+        return jsonify({"message": "Error adding book.", "status": "error"})
+
+# STAFF Remove a book
+@app.route('/remove_book/<book_id>', methods=['POST'])
+def remove_book(book_id):
+    if library1.remove_book(book_id):
+        return jsonify({"message": "Book removed successfully!", "status": "success"})
+    else:
+        return jsonify({"message": "Error removing book.", "status": "error"})
+    
+# STAFF Room Management
+@app.route('/manage_rooms')
+def manage_rooms():
+    raw_rooms = library1.get_all_rooms()
+    rooms = [
+    {"name": room[0], "capacity": room[1], "seats_occupied": room[2]}
+    for room in raw_rooms
+]
+
+    return render_template('room_management.html', rooms=rooms)
+
+# STAFF ADD ROOM
+@app.route('/add_room', methods=['POST'])
+def add_room():
+    try:
+        data = request.get_json()
+        print("Received data:", data)  
+
+        room_name = str(data.get("room_name", "")).strip()
+        capacity = data.get("room_capacity", 0)
+        position = data.get("coordinates", "0 0 0")
+        room_type = int(data.get("staff_only", "n").lower() == "y")
+
+        try:
+            capacity = int(capacity)
+        except ValueError:
+            return jsonify({"message": "Invalid room capacity", "status": "error"})
+
+        position = list(map(float, position.split()))
+        room_type = int(room_type == "y")
+
+        print(f"DEBUG: Calling library.add_room({room_name}, {capacity}, {position}, 'admin', {room_type})")
+        success = library1.add_room(room_name, capacity, position, "admin", room_type)
+
+        print(f"DEBUG: library.add_room() returned {success}")
+
+        if success:
+            return jsonify({"message": "Room added successfully!", "status": "success"})
+        else:
+            print("Library function returned False")
+            return jsonify({"message": "Error adding room.", "status": "error"})
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"message": f"Server error: {e}", "status": "error"})
+
+
+# STAFF REMOVE ROOM
+@app.route('/remove_room/<room_name>', methods=['POST'])
+def remove_room(room_name):
+    if library1.remove_room(room_name):  
+        return jsonify({"message": "Room removed successfully!", "status": "success"})
+    else:
+        return jsonify({"message": "Error removing room.", "status": "error"})
+    
+@app.route("/staff_permissions")
+def staff_permissions():
+    return render_template("staff_permissions.html")
+
+#Staff Permission
+@app.route("/set_staff_perms", methods=["POST"])
+def set_staff_perms():
+    try:
+        data = request.get_json()
+        staff_name = data["staff_name"]
+        permission_level = int(data["permission_level"])
+
+        success = library1.set_staff_perms(staff_name, permission_level)
+
+        if success:
+            return jsonify({"status": "success", "message": f"Permission updated for {staff_name}."})
+        else:
+            return jsonify({"status": "error", "message": "Failed to modify permissions."})
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+
+#LOGOUT ROUTE
+@app.route('/staff_logout')
+def staff_logout():
+    return redirect(url_for('staff_login'))
 
 
 if __name__ == '__main__':
